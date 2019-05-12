@@ -16,11 +16,11 @@
       <router-link to="/">
         <v-toolbar-title to="/">{{appTitle}}</v-toolbar-title>
       </router-link>
-      <v-btn flat class="hidden-sm-and-down" to="/menu">Menu</v-btn>
+      <v-btn flat class="hidden-sm-and-down" to="/groups">Groups</v-btn>
       <v-spacer class="hidden-sm-and-down"></v-spacer>
       <div v-if="!isAuthenticated" class="hidden-sm-and-down">
         <v-btn flat to="/signin">Login</v-btn>
-        <v-btn color="brown lighten-3" to="/join">Register</v-btn>
+        <v-btn color="brown lighten-3" to="/register">Register</v-btn>
       </div>
       <v-btn v-else outline color="white" @click="logout">Logout</v-btn>
     </v-toolbar>
@@ -34,7 +34,7 @@ export default {
     return {
       appTitle: "Lunchy",
       drawer: false,
-      items: [{ title: "Menu" }, { title: "Login" }, { title: "Register" }]
+      items: [{ title: "Groups" }, { title: "Login" }, { title: "Register" }]
     };
   },
   computed: {

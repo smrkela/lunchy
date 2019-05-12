@@ -4,16 +4,37 @@
       <v-flex xs12 sm8 md4>
         <v-card class="elevation-12">
           <v-toolbar dark color="primary">
-            <v-toolbar-title>Join Form</v-toolbar-title>
+            <v-toolbar-title>Register Form</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-text-field
                 prepend-icon="person"
+                name="firstName"
+                label="First name"
+                type="text"
+                :value="user.firstName"
+                @input="updateProps({firstName: $event})"
+                :rules="firstNameRules"
+                required
+              ></v-text-field>
+              <v-text-field
+                prepend-icon="person"
+                name="lastName"
+                label="Last name"
+                type="text"
+                :value="user.lastName"
+                @input="updateProps({lastName: $event})"
+                :rules="lastNameRules"
+                required
+              ></v-text-field>
+              <v-text-field
+                prepend-icon="person"
                 name="email"
                 label="Email"
                 type="email"
-                v-model="email"
+                :value="user.email"
+                @input="updateProps({email: $event})"
                 :rules="emailRules"
                 required
               ></v-text-field>
@@ -24,7 +45,8 @@
                 id="password"
                 type="password"
                 required
-                v-model="password"
+                :value="user.password"
+                @input="updateProps({password: $event})"
                 :rules="passwordRules"
               ></v-text-field>
             </v-form>
@@ -40,13 +62,20 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from "vuex";
+
+const { mapState, mapActions } = createNamespacedHelpers("Register");
+
 export default {
-  name: "Join",
+  name: "Register",
+  created() {
+    this.load();
+  },
   data() {
     return {
       valid: false,
-      email: "",
-      password: "",
+      firstNameRules: [v => !!v || "First name is required"],
+      lastNameRules: [v => !!v || "Last name is required"],
       emailRules: [
         v => !!v || "E-mail is required",
         v => /.+@.+/.test(v) || "E-mail must be valid"
@@ -57,13 +86,16 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapState({
+      user: state => state.user
+    })
+  },
   methods: {
+    ...mapActions(["load", "updateProps", "save"]),
     submit() {
       if (this.$refs.form.validate()) {
-        this.$store.dispatch("userJoin", {
-          email: this.email,
-          password: this.password
-        });
+        this.save();
       }
     }
   }

@@ -43,15 +43,26 @@ const actions = {
             commit("loadComplete", { name: "", description: "", color: "cyan" });
         }
     },
-    save({ commit, state }) {
+    save({ commit, state, rootState }) {
         commit("savePending");
 
         let promise;
 
-        if (state.isInsert)
-            promise = httpService.post("groups", { ...state.item, author: "Sasa Mrkela" });
-        else
-            promise = httpService.put("groups/" + state.itemId, state.item);
+        const userId = rootState.user.uid;
+
+        const group = {
+            ...state.item
+        }
+
+        if (state.isInsert) {
+            group.author = userId;
+            group.created = new Date().getTime();
+            group.members = { userId: userId, author: userId, created: new Date().getTime() };
+            promise = httpService.post("groups", group);
+        }
+        else {
+            promise = httpService.put("groups/" + state.itemId, group);
+        }
 
         promise.then(data => commit("saveComplete", data.data));
     },

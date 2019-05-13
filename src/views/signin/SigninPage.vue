@@ -13,7 +13,8 @@
                 name="email"
                 label="Email"
                 type="email"
-                v-model="email"
+                :value="user.email"
+                @input="updateProps({email: $event})"
                 :rules="emailRules"
                 required
               ></v-text-field>
@@ -24,14 +25,20 @@
                 id="password"
                 type="password"
                 required
-                v-model="password"
+                :value="user.password"
+                @input="updateProps({password: $event})"
                 :rules="passwordRules"
               ></v-text-field>
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" :disabled="!valid" @click="submit">Login</v-btn>
+            <v-btn
+              color="primary"
+              :disabled="!valid || saving"
+              :loading="saving"
+              @click="submit"
+            >Login</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -40,13 +47,18 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from "vuex";
+
+const { mapState, mapActions } = createNamespacedHelpers("Signin");
+
 export default {
   name: "Signin",
+  created() {
+    this.load();
+  },
   data() {
     return {
       valid: false,
-      email: "",
-      password: "",
       emailRules: [
         v => !!v || "E-mail is required",
         v => /.+@.+/.test(v) || "E-mail must be valid"
@@ -57,14 +69,16 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapState({
+      user: state => state.user,
+      saving: state => state.saving
+    })
+  },
   methods: {
+    ...mapActions(["load", "updateProps", "save"]),
     submit() {
-      if (this.$refs.form.validate()) {
-        this.$store.dispatch("userLogin", {
-          email: this.email,
-          password: this.password
-        });
-      }
+      if (this.$refs.form.validate()) this.save();
     }
   }
 };

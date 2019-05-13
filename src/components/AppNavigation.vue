@@ -22,7 +22,10 @@
         <v-btn flat to="/signin">Login</v-btn>
         <v-btn color="brown lighten-3" to="/register">Register</v-btn>
       </div>
-      <v-btn v-else outline color="white" @click="logout">Logout</v-btn>
+      <span v-else>
+        <span>{{userTitle}}</span>
+        <v-btn outline color="white" @click="logout">Logout</v-btn>
+      </span>
     </v-toolbar>
   </span>
 </template>
@@ -40,6 +43,9 @@ export default {
   computed: {
     isAuthenticated() {
       return this.$store.getters.isAuthenticated;
+    },
+    userTitle() {
+      return "Hi " + this.$store.state.user.firstName;
     }
   },
   methods: {

@@ -23,7 +23,7 @@
         <v-btn color="brown lighten-3" to="/register">Register</v-btn>
       </div>
       <span v-else>
-        <span>{{userTitle}}</span>
+        <v-btn to="/user-profile">{{userTitle}}</v-btn>
         <v-btn outline color="white" @click="logout">Logout</v-btn>
       </span>
     </v-toolbar>

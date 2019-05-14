@@ -42,5 +42,13 @@ export default [
         meta: {
             authRequired: true
         }
+    },
+    {
+        path: "/user-profile",
+        name: 'userProfile',
+        component: () => import("../views/userprofile/UserProfilePage.vue"),
+        meta: {
+            authRequired: true
+        }
     }
 ];

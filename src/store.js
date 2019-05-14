@@ -8,6 +8,7 @@ import groupsStore from "./views/groups/GroupsStore";
 import groupEditStore from "./views/groupedit/GroupEditStore";
 import registerStore from "./views/register/RegisterStore";
 import signinStore from "./views/signin/SigninStore";
+import userProfileStore from "./views/userprofile/UserProfileStore";
 
 Vue.use(Vuex);
 
@@ -16,7 +17,8 @@ export default new Vuex.Store({
     Groups: groupsStore,
     GroupEdit: groupEditStore,
     Register: registerStore,
-    Signin: signinStore
+    Signin: signinStore,
+    UserProfile: userProfileStore
   },
   state: {
     user: null,

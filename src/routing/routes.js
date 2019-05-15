@@ -50,5 +50,13 @@ export default [
         meta: {
             authRequired: true
         }
+    },
+    {
+        path: "/group/:id",
+        name: 'group',
+        component: () => import("../views/grouphome/GroupHomePage.vue"),
+        meta: {
+            authRequired: true
+        }
     }
 ];

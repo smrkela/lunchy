@@ -9,6 +9,8 @@ import groupEditStore from "./views/groupedit/GroupEditStore";
 import registerStore from "./views/register/RegisterStore";
 import signinStore from "./views/signin/SigninStore";
 import userProfileStore from "./views/userprofile/UserProfileStore";
+import userHomeStore from "./views/userhome/UserHomeStore";
+import groupHomeStore from "./views/grouphome/GroupHomeStore";
 
 Vue.use(Vuex);
 
@@ -18,7 +20,9 @@ export default new Vuex.Store({
     GroupEdit: groupEditStore,
     Register: registerStore,
     Signin: signinStore,
-    UserProfile: userProfileStore
+    UserProfile: userProfileStore,
+    UserHome: userHomeStore,
+    GroupHome: groupHomeStore
   },
   state: {
     user: null,

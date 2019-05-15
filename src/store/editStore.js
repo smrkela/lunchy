@@ -21,7 +21,9 @@ const commonMutationNames = {
 };
 
 const commonMutations = {
-    [commonMutationNames.LOAD_PENDING](state) {
+    [commonMutationNames.LOAD_PENDING](state, itemId) {
+        state.isInsert = !itemId;
+        state.itemId = itemId;
         state.item = {};
         state.loading = true;
         state.saved = false;

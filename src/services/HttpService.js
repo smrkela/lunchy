@@ -5,8 +5,13 @@ const firebaseUrl = "https://lunchy-c657c.firebaseio.com/";
 
 class HttpService {
 
-    get(url) {
-        return axios.get(firebaseUrl + url + ".json");
+    get(url, params) {
+
+        const target = firebaseUrl + url + ".json" + (params || "");
+
+        console.log("GET '" + target + "'");
+
+        return this.wrapResult(axios.get(target));
     }
 
     post(url, data) {

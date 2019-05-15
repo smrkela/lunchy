@@ -34,12 +34,10 @@ const mutations = {
 }
 
 const actions = {
-    load({ commit }) {
+    async load({ commit, rootState }) {
         commit("loadPending");
-        httpService.get("groups")
-            .then(data => {
-                commit("loadComplete", FirebaseUtils.toArray(data.data))
-            });
+        const data = await httpService.get("groups", `?orderBy="members/userId"&equalTo${rootState.user.uid}`);
+        commit("loadComplete", FirebaseUtils.toArray(data.data))
     },
     showInsertDialog({ commit }) {
         commit("showInsertDialog");

@@ -64,19 +64,21 @@ const commonActions = {
             }
         }
     },
-    save(resourceUrl, newResourceFactory, updatedResourceFactory) {
-        return async ({ commit, state, rootState }) => {
+    save(resourceUrlOrFactory, newResourceFactory, updatedResourceFactory) {
+        return async ({ commit, state, rootState }, payload) => {
             commit(commonMutationNames.SAVE_PENDING);
 
             let response;
 
+            const url = typeof resourceUrlOrFactory === "string" ? resourceUrlOrFactory : resourceUrlOrFactory(state, payload, rootState);
+
             if (state.isInsert) {
                 const item = newResourceFactory(state, rootState);
-                response = await httpService.post(resourceUrl, item);
+                response = await httpService.post(url, item);
             }
             else {
                 const item = updatedResourceFactory(state, rootState);
-                response = await httpService.put(resourceUrl + "/" + state.itemId, item);
+                response = await httpService.put(url + "/" + state.itemId, item);
             }
 
             commit(commonMutationNames.SAVE_COMPLETE, response.data);

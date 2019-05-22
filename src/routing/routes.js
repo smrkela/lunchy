@@ -58,5 +58,13 @@ export default [
         meta: {
             authRequired: true
         }
+    },
+    {
+        path: "/group-restaurants/:groupId",
+        name: 'groupRestaurants',
+        component: () => import("../views/grouprestaurants/GroupRestaurantsPage.vue"),
+        meta: {
+            authRequired: true
+        }
     }
 ];

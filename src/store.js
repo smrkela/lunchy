@@ -11,6 +11,9 @@ import signinStore from "./views/signin/SigninStore";
 import userProfileStore from "./views/userprofile/UserProfileStore";
 import userHomeStore from "./views/userhome/UserHomeStore";
 import groupHomeStore from "./views/grouphome/GroupHomeStore";
+import groupRestaurantsStore from "./views/grouprestaurants/GroupRestaurantsStore";
+import groupRestaurantEditStore from "./views/grouprestaurantedit/GroupRestaurantEditStore";
+import groupMembersStore from "./views/groupmembers/GroupMembersStore";
 
 Vue.use(Vuex);
 
@@ -22,7 +25,10 @@ export default new Vuex.Store({
     Signin: signinStore,
     UserProfile: userProfileStore,
     UserHome: userHomeStore,
-    GroupHome: groupHomeStore
+    GroupHome: groupHomeStore,
+    GroupRestaurants: groupRestaurantsStore,
+    GroupRestaurantEdit: groupRestaurantEditStore,
+    GroupMembers: groupMembersStore,
   },
   state: {
     user: null,

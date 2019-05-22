@@ -20,7 +20,7 @@ const mutations = {
 const actions = {
     async load({ commit, rootState }) {
         commit("loadPending");
-        const response = await httpService.get("groups", `?orderBy="members/userId"&equalTo${rootState.user.uid}`);
+        const response = await httpService.get("groups", `?orderBy="members/userId"&equalTo"${rootState.user.uid}"`);
         commit("loadComplete", { groups: FirebaseUtils.toArray(response.data) });
     }
 };

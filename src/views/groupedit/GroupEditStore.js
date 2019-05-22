@@ -10,7 +10,7 @@ const insertGroupFactory = (state, rootState) => {
         ...state.item,
         author: userId,
         created: new Date().getTime(),
-        members: { userId: userId, author: userId, created: new Date().getTime() },
+        members: [{ userId: userId, author: userId, created: new Date().getTime() }],
     };
 
     return group;

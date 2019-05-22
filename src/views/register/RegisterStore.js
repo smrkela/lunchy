@@ -33,7 +33,8 @@ const actions = {
                 const userId = data.user.uid;
                 const userProfile = {
                     firstName: state.user.firstName,
-                    lastName: state.user.lastName
+                    lastName: state.user.lastName,
+                    email: state.user.email
                 }
                 httpService.put("users/" + userId, userProfile)
                     .then(data => {

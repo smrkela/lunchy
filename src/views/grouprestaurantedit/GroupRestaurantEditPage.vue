@@ -26,18 +26,8 @@
                     label="Description"
                     :value="item.description"
                     @input="updateItem({description: $event})"
-                    hint="Describe this group for cenvenience"
+                    hint="Describe this restaurant for cenvenience"
                   ></v-text-field>
-                </v-flex>
-
-                <v-flex xs12 sm6>
-                  <v-select
-                    :items="colors"
-                    :value="item.color"
-                    @input="updateItem({color: $event})"
-                    label="Color*"
-                    required
-                  ></v-select>
                 </v-flex>
               </v-layout>
             </v-form>
@@ -59,16 +49,17 @@ import { createNamespacedHelpers } from "vuex";
 import ColorUtils from "../../utils/ColorUtils.js";
 import OverlayLoader from "../../components/OverlayLoader";
 
-const { mapState, mapActions } = createNamespacedHelpers("GroupEdit");
+const { mapState, mapActions } = createNamespacedHelpers("GroupRestaurantEdit");
 
 export default {
-  name: "GroupEditPage",
+  name: "GroupRestaurantEditPage",
   props: {
-    itemId: String
+    itemId: String,
+    groupId: String
   },
   components: { OverlayLoader },
   created() {
-    this.load(this.itemId);
+    this.load({ itemId: this.itemId, groupId: this.groupId });
   },
   data() {
     return {
@@ -79,7 +70,7 @@ export default {
   },
   computed: {
     ...mapState({
-      title: state => (state.isInsert ? "Add group" : "Update group"),
+      title: state => (state.isInsert ? "Add restaurant" : "Update restaurant"),
       item: state => state.item,
       saved: state => state.saved,
       loading: state => state.loading,

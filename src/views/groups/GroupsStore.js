@@ -1,56 +1,37 @@
-import httpService from "../../services/HttpService";
-import FirebaseUtils from "../../utils/FirebaseUtils";
+import listStore from "../../store/listStore";
 
-const state = {
-    items: [],
-    loading: false,
-    dialogVisible: false,
-    dialogEditing: false,
-    dialogLoading: false,
-    itemId: null
-}
+const state = listStore.state({ selectedGroup: null, membersDialogVisible: false });
 
 const mutations = {
-    loadPending(state, payload) {
-        state.loading = true;
+    loadPending: listStore.mutations.loadPending,
+    loadComplete: listStore.mutations.loadComplete,
+    showInsertDialog: listStore.mutations.showInsertDialog,
+    closeDialog: listStore.mutations.closeDialog,
+    showEditDialog: listStore.mutations.showEditDialog,
+    showMembersDialog(state, group) {
+        state.selectedGroup = group;
+        state.membersDialogVisible = true;
     },
-    loadComplete(state, payload) {
-        state.items = payload;
-        state.loading = false;
-    },
-    showInsertDialog(state, payload) {
-        state.itemId = null;
-        state.dialogEditing = false;
-        state.dialogVisible = true;
-    },
-    closeDialog(state) {
-        state.dialogVisible = false;
-    },
-    showEditDialog(state, itemId) {
-        state.itemId = itemId;
-        state.dialogEditing = true;
-        state.dialogVisible = true;
+    closeMembersDialog(state) {
+        state.selectedGroup = null;
+        state.membersDialogVisible = false;
     }
 }
 
 const actions = {
-    async load({ commit, rootState }) {
-        commit("loadPending");
-        const data = await httpService.get("groups", `?orderBy="members/userId"&equalTo${rootState.user.uid}`);
-        commit("loadComplete", FirebaseUtils.toArray(data.data))
+    load: listStore.actions.load("groups", (state, payload, rootState) => `?orderBy="members/userId"&equalTo"${rootState.user.uid}"`),
+    showInsertDialog: listStore.actions.showInsertDialog,
+    closeDialog: listStore.actions.closeDialog,
+    showEditDialog: listStore.actions.showEditDialog,
+    dialogSaved: listStore.actions.dialogSaved,
+    showMembersDialog({ commit }, group) {
+        commit("showMembersDialog", group);
     },
-    showInsertDialog({ commit }) {
-        commit("showInsertDialog");
+    membersDialogSaved({ commit }) {
+
     },
-    closeDialog({ commit }) {
-        commit("closeDialog");
-    },
-    showEditDialog({ commit }, itemId) {
-        commit("showEditDialog", itemId);
-    },
-    dialogSaved({ commit, dispatch }) {
-        dispatch("closeDialog");
-        dispatch("load");
+    closeMembersDialog({ commit }) {
+        commit("closeMembersDialog");
     }
 }
 

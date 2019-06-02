@@ -1,4 +1,7 @@
 import listStore from "../../store/listStore";
+import httpService from "../../services/HttpService";
+import FirebaseUtils from "../../utils/FirebaseUtils";
+import GroupsApi from "../../api/GroupsApi";
 
 const state = listStore.state({ selectedGroup: null, membersDialogVisible: false });
 
@@ -19,7 +22,14 @@ const mutations = {
 }
 
 const actions = {
-    load: listStore.actions.load("groups", (state, payload, rootState) => `?orderBy="members/userId"&equalTo"${rootState.user.uid}"`),
+    async load({ commit, state, rootState }, payload) {
+
+        commit("loadPending", payload);
+
+        const groups = await GroupsApi.loadByUserId(rootState.user.uid);
+
+        commit("loadComplete", groups);
+    },
     showInsertDialog: listStore.actions.showInsertDialog,
     closeDialog: listStore.actions.closeDialog,
     showEditDialog: listStore.actions.showEditDialog,

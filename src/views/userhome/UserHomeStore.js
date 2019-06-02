@@ -1,5 +1,6 @@
 import httpService from "../../services/HttpService";
 import FirebaseUtils from "../../utils/FirebaseUtils";
+import GroupsApi from "../../api/GroupsApi";
 
 const state = {
     groups: [],
@@ -19,9 +20,12 @@ const mutations = {
 
 const actions = {
     async load({ commit, rootState }) {
+
         commit("loadPending");
-        const response = await httpService.get("groups", `?orderBy="members/userId"&equalTo"${rootState.user.uid}"`);
-        commit("loadComplete", { groups: FirebaseUtils.toArray(response.data) });
+
+        const groups = await GroupsApi.loadByUserId(rootState.user.uid);
+
+        commit("loadComplete", { groups });
     }
 };
 

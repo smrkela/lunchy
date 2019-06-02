@@ -1,4 +1,6 @@
 import editStore from "../../store/editStore";
+import httpService from "../../services/HttpService";
+import GroupsApi from "../../api/GroupsApi";
 
 const groupInitializer = () => ({ name: "", description: "", color: "cyan" });
 
@@ -9,8 +11,7 @@ const insertGroupFactory = (state, rootState) => {
     const group = {
         ...state.item,
         author: userId,
-        created: new Date().getTime(),
-        members: [{ userId: userId, author: userId, created: new Date().getTime() }],
+        created: new Date().getTime()
     };
 
     return group;
@@ -30,7 +31,24 @@ const mutations = {
 
 const actions = {
     load: editStore.actions.load("groups", groupInitializer),
-    save: editStore.actions.save("groups", insertGroupFactory, updateGroupFactory),
+    async save({ commit, state, rootState }) {
+
+        commit("savePending");
+
+        let response;
+
+        if (state.isInsert) {
+            const group = insertGroupFactory(state, rootState);
+
+            response = await GroupsApi.insertGroup(group);
+        }
+        else {
+            const group = updateGroupFactory(state, rootState);
+            response = await httpService.put("groups/" + state.itemId, group);
+        }
+
+        commit("saveComplete", response.data);
+    },
     updateItem: editStore.actions.updateItem
 }
 

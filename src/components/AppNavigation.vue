@@ -16,8 +16,8 @@
       <router-link to="/">
         <v-toolbar-title to="/">{{appTitle}}</v-toolbar-title>
       </router-link>
-      <v-btn flat class="hidden-sm-and-down" to="/user-home">Home</v-btn>
-      <v-btn flat class="hidden-sm-and-down" to="/groups">Administer groups</v-btn>
+      <v-btn v-if="isAuthenticated" flat class="hidden-sm-and-down" to="/user-home">Home</v-btn>
+      <v-btn v-if="isAuthenticated" flat class="hidden-sm-and-down" to="/groups">Administer groups</v-btn>
       <v-spacer class="hidden-sm-and-down"></v-spacer>
       <div v-if="!isAuthenticated" class="hidden-sm-and-down">
         <v-btn flat to="/signin">Login</v-btn>

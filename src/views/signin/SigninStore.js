@@ -1,5 +1,6 @@
 import firebase from "firebase";
 import httpService from "../../services/HttpService";
+import UsersApi from "../../api/UsersApi";
 
 const state = {
     user: {},
@@ -36,9 +37,9 @@ const actions = {
 
         try {
             const signInResponse = await firebase.auth().signInWithEmailAndPassword(state.user.email, state.user.password);
-            const userResponse = await httpService.get("users/" + signInResponse.user.uid);
+            const user = await UsersApi.loadUser(signInResponse.user.uid);
 
-            dispatch('setUser', { ...userResponse.data, uid: signInResponse.user.uid }, { root: true });
+            dispatch('setUser', user, { root: true });
         }
         catch (error) {
 

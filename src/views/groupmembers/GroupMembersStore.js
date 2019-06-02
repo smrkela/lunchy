@@ -1,4 +1,5 @@
 import httpService from "../../services/HttpService";
+import GroupsApi from "../../api/GroupsApi";
 
 const state = {
     loading: false,
@@ -23,8 +24,9 @@ const mutations = {
     addMemberPending(state) {
         state.loadingNewMember = true;
     },
-    addMemberComplete(state) {
-        // TODO: add new member to the existing members array
+    addMemberComplete(state, user) {
+        state.members.push(user);
+        state.newMemberEmail = "";
         state.loadingNewMember = false;
     }
 }
@@ -32,16 +34,20 @@ const mutations = {
 const actions = {
     async load({ commit }, group) {
         commit("loadPending", group);
-        const members = group.members;
+        const groupId = group.id;
+
+        const groupMembers = await httpService.get("group-members/" + groupId);
+        const userIds = Object.keys(groupMembers.data);
+
         // We load each member as a user
-        const promises = members.map(it => httpService.get("users/" + it.userId));
+        const promises = userIds.map(it => httpService.get("users/" + it));
 
         const result = await Promise.all(promises);
 
         const loadedMembers = result.map(it => it.data);
 
         // Add user id to each loaded member
-        loadedMembers.forEach((it, index) => it.userId = members[index].userId);
+        loadedMembers.forEach((it, index) => it.userId = userIds[index]);
 
         commit("loadComplete", { members: loadedMembers });
     },
@@ -52,16 +58,27 @@ const actions = {
     emailInput({ commit }, emailValue) {
         commit("emailInput", emailValue);
     },
-    async addMember({ commit, state }) {
+    async addMember({ commit, state, rootState }) {
         commit("addMemberPending");
+
         const email = state.newMemberEmail;
         const response = await httpService.get("users", `?orderBy="email"&equalTo="${email}"`);
-        
-        const user = response.data;
 
-        console.log("USER: ", user);
-        //const result = httpService.get("users")
-        //commit("addMemberComplete");
+        const userNode = response.data;
+        const userId = Object.keys(userNode)[0];
+
+        if (!userId) {
+
+            // TODO: Show notification in some way that there is no user for the entered email
+
+        } else {
+
+            const user = { ...userNode[userId], userId };
+
+            await GroupsApi.addGroupMember(state.group.id, userId, rootState.user.uid);
+
+            commit("addMemberComplete", user);
+        }
     }
 }
 
